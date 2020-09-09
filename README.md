@@ -1,3 +1,3 @@
-# hello-world
+# MF code : Project 1
 just a repository
-i am a new developer
+My first code implementation for project 1 in MF course.
