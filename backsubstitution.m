@@ -6,6 +6,10 @@ function x = backsubstitution(A,b)
 N = length(A);
 x = zeros(N,1);
 for i=N:-1:1
+    if A(i,i) == 0
+        x(i) = 1;
+        continue
+    end
     x(i) = b(i) - A(i,i+1:N)*x(i+1:N);
     x(i) = x(i)/A(i,i);
 end

@@ -1,3 +1,4 @@
+clear;clc;
 traindata = importdata('traindata.txt');
 K = int32(5);
 [N,~] = size(traindata);

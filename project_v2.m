@@ -11,10 +11,16 @@ X2 = sqrt(X(:,6:8));
 X3 = X(:,5);
 Z1= cat(2,X1,X3,X2);
 minTesterror = +Inf;
+order = zeros(1,8);
 
-for p = 1:7
-    tR = 0;
+for count = 0:(3^8-1)
+    back = count;
+    for o = 1:8
+        order(o) = mod(back,3)+1;
+        back = idivide(int32(back),int32(3),'floor');
+    end
     test_R = 0;
+    tR = 0;
     for k = 1:K
         Z = [];
         Z_test = [];
@@ -24,11 +30,19 @@ for p = 1:7
         trainY = Y([1:fold*(k-1),fold*k+1:N]);
         [N1, M1] = size(trainZ1);
         [N2, M2] = size(testZ1);
-        for i = 1:p
-            Z = [Z;trainZ1.^i];
+        for o = 1:8
+            p = order(o);
+            trainZ2 = trainZ1(o,:);
+            for i = 1:p
+                Z = [Z;trainZ2.^i];
+            end
         end
-        for i = 1:p
-            Z_test = [Z_test;testZ1.^i];
+        for o = 1:8
+            p = order(o);
+            testZ2 = testZ1(o,:);
+            for i = 1:p
+                Z_test = [Z_test;testZ2.^i];
+            end
         end
         constant1 = ones(1,M1);
         constant2 = ones(1,M2);
@@ -37,24 +51,28 @@ for p = 1:7
         [w, R] = solve_weight(Z,trainY);
         tR = tR + R;
         test_R = test_R + test_error(w, Z_test, testY);       
-    end
+    end    
+ 
     test_R = test_R / 10;
     tR = tR / 10;
     if(test_R<=minTesterror)
             minTesterror = test_R;
+            minOrder = order;
             minTR = tR;
-            minP = p;
     end  
 end
 
-Z1 = Z1';
 Z = [];
-
-for i = 1:minP
-    Z = [Z;Z1.^i];
+Z1 = Z1';
+for o = 1:8
+    p = minOrder(o);
+    trainZ2 = Z1(o,:);
+    for i = 1:p
+        Z = [Z;trainZ2.^i];
+    end
 end
 constant = ones(1,N);
 Z = [Z;constant];
 [w_final, R_final] = solve_weight(Z,Y);
 averageError = sqrt(R_final / double(N));
-fprintf('minP:%-4dminTR:%-15.4fminTesterror:%-15.4faverageError:%-10.4f\n',minP,minTR,minTesterror,averageError);
+fprintf('minTR:%-15.4fminTesterror:%-15.4faverageError:%-10.4f\n',minTR,minTesterror,averageError);
