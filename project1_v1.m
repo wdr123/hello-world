@@ -11,8 +11,9 @@ X2 = sqrt(X(:,6:8));
 X3 = X(:,5);
 Z1= cat(2,X1,X3,X2);
 minTesterror = +Inf;
+testError = [];
 
-for p = 1:7
+for p = 1:8
     tR = 0;
     test_R = 0;
     for k = 1:K
@@ -35,8 +36,8 @@ for p = 1:7
         Z = [Z;constant1];
         Z_test = [Z_test;constant2];
         [w, R] = solve_weight(Z,trainY);
-        tR = tR + R;
-        test_R = test_R + test_error(w, Z_test, testY);       
+        tR = tR + R/M1;
+        test_R = test_R + test_error(w, Z_test, testY)/M2;       
     end
     test_R = test_R / 10;
     tR = tR / 10;
@@ -44,9 +45,12 @@ for p = 1:7
             minTesterror = test_R;
             minTR = tR;
             minP = p;
-    end  
+    end
+    testError = [testError, tR];
 end
 
+% p = [1,2,3,4,5,6,7,8,9,10];
+% plotdata(p,testError);
 Z1 = Z1';
 Z = [];
 
@@ -56,5 +60,5 @@ end
 constant = ones(1,N);
 Z = [Z;constant];
 [w_final, R_final] = solve_weight(Z,Y);
-averageError = sqrt(R_final / double(N));
+averageError = R_final / double(N);
 fprintf('minP:%-4dminTR:%-15.4fminTesterror:%-15.4faverageError:%-10.4f\n',minP,minTR,minTesterror,averageError);
