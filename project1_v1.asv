@@ -69,7 +69,7 @@ Z = [Z;constant];
 averageError = R_final / double(N);
 fprintf('minP:%-4dminTR:%-15.4fminTesterror:%-15.4faverageError:%-10.4f\n',minP,minTR,minTesterror,averageError);
 Z = [];
-Ztest = Ztest';
+Z_test = Z_test';
 for i = 1:minP
     Z = [Z;Ztest.^i];
 end

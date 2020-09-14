@@ -8,9 +8,9 @@ ms = 7; % marker size
 fs = 20; % font size
 
 set(gca,'FontSize',fs)
-plot(x,y,'o','LineWidth',lw,'MarkerSize',ms)
-xlim([0 1])
-ylim([0 1])
+plot(x,y,'LineWidth',lw,'MarkerSize',ms)
+% xlim([0 1])
+% ylim([0 1])
 xlabel('x')
 ylabel('y')
 
